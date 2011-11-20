@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency 'eventmachine', ">= 0.12.10"
   s.add_dependency 'em-http-request'
+  s.add_dependency 'builder'
   
   s.rubyforge_project = "em_airbrake"
 
