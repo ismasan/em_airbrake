@@ -61,7 +61,8 @@ module EmAirbrake
       if value.respond_to?(:to_hash)
         builder.var(:key => key.to_s){|b| xml_vars_for(b, value.to_hash) }
       else
-        builder.var(value.inspect, :key => key.to_s)
+        v = value.is_a?(String) ? value : value.inspect
+        builder.var(v, :key => key.to_s)
       end
     end
   end
