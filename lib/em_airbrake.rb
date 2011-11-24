@@ -32,7 +32,8 @@ module EmAirbrake
       :parameters    => {},
       :session       => {},
       :url           => default_url,
-      :component     => default_url
+      :component     => default_url,
+      :env           => nil
     }.merge(args)
     
     post(data)
@@ -58,9 +59,9 @@ module EmAirbrake
   def xml_vars_for(builder, hash)
     hash.each do |key, value|
       if value.respond_to?(:to_hash)
-        builder.var(:key => key){|b| xml_vars_for(b, value.to_hash) }
+        builder.var(:key => key.to_s){|b| xml_vars_for(b, value.to_hash) }
       else
-        builder.var(value.to_s, :key => key)
+        builder.var(value.inspect, :key => key.to_s)
       end
     end
   end
@@ -106,6 +107,13 @@ module EmAirbrake
         if data[:parameters]
           request.params do |params|
             xml_vars_for(params, data[:parameters])
+          end
+        end
+        
+        # Environment ===============
+        if data[:env]
+          request.tag!('cgi-data') do |cgi|
+            xml_vars_for(cgi, data[:env])
           end
         end
         
